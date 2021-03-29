@@ -1,15 +1,11 @@
 package com.iscorpio.filter;
 
 
-import cn.hutool.core.comparator.CompareUtil;
-import com.alibaba.fastjson.JSONArray;
 import com.iscorpio.struct.OrderBy;
-import org.apache.commons.collections4.CollectionUtils;
+import com.iscorpio.utils.ValidatorUtils;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -23,8 +19,14 @@ import java.util.stream.Collectors;
  */
 public class OrderFilter {
 
+    /**
+     * 对原始数组做自然排序
+     * @param origin 原始列表
+     * @param orders 排序列表
+     * @return 排序后的列表
+     */
     public static List<Map<String, Object>> filter(List<Map<String, Object>> origin, List<OrderBy> orders) {
-        checkOrderKeys(origin, orders);
+        ValidatorUtils.validateParam(origin, orders.parallelStream().map(OrderBy::getColName).collect(Collectors.toSet()));
         AtomicInteger i = new AtomicInteger(orders.size());
         while (i.getAndDecrement() > 0) {
             origin = origin.stream().sorted((s1, s2) -> {
@@ -38,16 +40,6 @@ public class OrderFilter {
             }).collect(Collectors.toList());
         }
         return origin;
-    }
-
-    private static void checkOrderKeys(List<Map<String, Object>> origin, List<OrderBy> orders) {
-        Map<String, Object> next = origin.iterator().next();
-        Set<String> keys = next.keySet();
-        orders.parallelStream().forEach(f -> {
-            if (!keys.contains(f.getColName())) {
-                throw new IllegalArgumentException("排序参数不匹配");
-            }
-        });
     }
 
 }

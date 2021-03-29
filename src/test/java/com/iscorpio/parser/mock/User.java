@@ -31,7 +31,7 @@ public class User {
         String[] deptName = new String[]{"研发部", "产品部", "人力部"};
         Random random = new Random();
         return IntStream
-                .range(0, 9)
+                .rangeClosed(0, 9)
                 .mapToObj(m -> {
                     User user = new User();
                     user.setName(name[m]);

@@ -1,6 +1,7 @@
 package com.iscorpio.struct;
 
 import com.iscorpio.struct.common.StatementStruct;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 /**
@@ -12,6 +13,7 @@ import lombok.Data;
  * @vesion 1.0
  */
 @Data
+@AllArgsConstructor
 public class Limit implements StatementStruct {
 
     private Integer offset;
